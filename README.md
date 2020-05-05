@@ -4,23 +4,23 @@ only requires an option and an action routine to call when the option is process
 
 The CLI help output looks like this:
 
-  (C) Copyright Tom Cole 2020
-
-  Usage:
-     weather [options] [command]    view weather for a given location, 1.0-0
-
-  Commands:
-    help                           Display help text            
-    profile                        Manage the default profile   
+    (C) Copyright Tom Cole 2020
+    
+    Usage:
+       weather [options] [command]    view weather for a given location, 1.0-0
+    
+    Commands:
+       help                           Display help text            
+       profile                        Manage the default profile   
   
-  Options:
-    --debug, -d                    Are we debugging? [CLI_DEBUG]                                   
-    --help, -h                     Show this help text                                             
-    --location <list>              The location (city, state) for which the weather is displayed   
-    --output-format <string>       Specify text or json output format [CLI_OUTPUT_FORMAT]          
-    --profile, -p <string>         Name of profile to use [CLI_PROFILE]                            
-    --quiet, -q                    If specified, suppress extra messaging [CLI_QUIET]              
-    --version, -v                  Show version number of command line tool                        
+    Options:
+      --debug, -d                    Are we debugging? [CLI_DEBUG]                                   
+      --help, -h                     Show this help text                                             
+      --location <list>              The location (city, state) for which the weather is displayed   
+      --output-format <string>       Specify text or json output format [CLI_OUTPUT_FORMAT]          
+      --profile, -p <string>         Name of profile to use [CLI_PROFILE]                            
+      --quiet, -q                    If specified, suppress extra messaging [CLI_QUIET]              
+      --version, -v                  Show version number of command line tool                        
 
 Note that the actual command grammar only specifies the --location option, which is used to pass a city and state/country
 designation. The other options are added automatically by the app-cli framework, as are the help and profile subcommands.
