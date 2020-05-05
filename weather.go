@@ -109,6 +109,7 @@ type (
 		Text  []WeatherText   `json:"weather"`
 		Main  WeatherOverview `json:"main"`
 		Wind  WeatherWind     `json:"wind"`
+		Name  string          `json:"name"`
 	}
 )
 
@@ -185,6 +186,9 @@ func WeatherAction(c *cli.Context) error {
 	}
 
 	t, _ := tables.New([]string{"Item", "Value"})
+	if weather.Name != "" {
+		t.AddRowItems("Name", weather.Name)
+	}
 	if len(weather.Text) > 0 {
 		t.AddRowItems("Summary", weather.Text[0].Description)
 	}

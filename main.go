@@ -17,9 +17,7 @@ func main() {
 	err := app.Parse(WeatherGrammar, os.Args, WeatherAction)
 
 	// If something went wrong, report it to the user and force an exit
-	// status of 1. @TOMCOLE later this should be extended to allow an error
-	// code to carry along the desired exit code to support multiple types
-	// of errors.
+	// status from the error, else a default General error.
 	if err != nil {
 		fmt.Printf("Error: %v\n", err.Error())
 		if e2, ok := err.(cli.ExitError); ok {
