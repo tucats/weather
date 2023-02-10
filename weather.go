@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/tucats/gopackages/app-cli/cli"
-	"github.com/tucats/gopackages/app-cli/profile"
+	"github.com/tucats/gopackages/app-cli/settings"
 	"github.com/tucats/gopackages/app-cli/tables"
 	"github.com/tucats/gopackages/app-cli/ui"
 )
@@ -115,7 +115,7 @@ type (
 
 // WeatherGrammar defines the subgrammar of the weather command.
 var WeatherGrammar = []cli.Option{
-	cli.Option{
+	{
 		LongName:    "location",
 		Description: "The location (city, state) for which the weather is displayed",
 		OptionType:  cli.StringListType,
@@ -128,11 +128,11 @@ func WeatherAction(c *cli.Context) error {
 	var city string
 	var state string
 
-	location, found := c.GetStringList("location")
+	location, found := c.StringList("location")
 
 	if !found {
-		city = profile.Get("weather-city")
-		state = profile.Get("weather-state")
+		city = settings.Get("weather-city")
+		state = settings.Get("weather-state")
 	} else {
 		if len(location) < 1 || len(location) > 2 {
 			return cli.NewExitError("incomplete location name", cli.ExitUsageError)
@@ -147,25 +147,25 @@ func WeatherAction(c *cli.Context) error {
 			state = longName
 		}
 
-		profile.Set("weather-city", city)
-		profile.Set("weather-state", state)
+		settings.Set("weather-city", city)
+		settings.Set("weather-state", state)
 	}
 
 	if city == "" {
 		return cli.NewExitError("incomplete location name", cli.ExitUsageError)
 	}
 
-	keyValue := profile.Get("weather-api-key")
+	keyValue := settings.Get("weather-api-key")
 	if keyValue == "" {
 		// Get your own darn key
 		keyValue = "fbd457b51b56eddf1644edefd591f89c"
-		profile.Set("weather-api-key", keyValue)
+		settings.Set("weather-api-key", keyValue)
 	}
 
 	parms := url.QueryEscape(city+","+state) + "&appid=" + keyValue + "&units=imperial"
 	url := "https://api.openweathermap.org/data/2.5/weather?q=" + parms
 
-	ui.Debug("URL: %s", url)
+	ui.Log(ui.DebugLogger, "URL: %s", url)
 
 	response, err := http.Get(url)
 
@@ -178,7 +178,7 @@ func WeatherAction(c *cli.Context) error {
 
 	weather := Weather{}
 	data, _ := ioutil.ReadAll(response.Body)
-	ui.Debug("Reply: %s, %s", response.Status, string(data))
+	ui.Log(ui.DebugLogger, "Reply: %s, %s", response.Status, string(data))
 
 	err = json.Unmarshal(data, &weather)
 	if err != nil {
@@ -207,7 +207,7 @@ func WeatherAction(c *cli.Context) error {
 	t.AddRowItems("Pressure", weather.Main.Pressure)
 	t.AddRowItems("Humidity", weather.Main.Humidity)
 
-	t.Print(profile.Get("output-format"))
+	t.Print(settings.Get("output-format"))
 
 	return nil
 }
